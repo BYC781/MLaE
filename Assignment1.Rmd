@@ -1,0 +1,41 @@
+---
+title: "Assignment #1"
+author: "Boyu, Chen R11323006"
+date: "2023-03-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Q1
+The square of Euclidean norm represented by matrix form is 
+```{=tex}
+\begin{align*}
+&\| \beta \|^2_2 = \sum_j |\beta_j|^2\\
+&\lambda \| \beta \|^2_2 = \lambda \sum_i |\beta_j|^2 = \lambda \sum_i \beta_j^2 = \beta^T \lambda I \beta
+\end{align*}
+```
+Let $Q$ denote the objective function, $Q = (Y-X\beta)^T(Y-X\beta) + \lambda\| \beta \|^2_2$
+```{=tex}
+\begin{align*}
+
+\hat\beta &= \mathop{\arg\min}_{\beta}Q \\
+&= \mathop{\arg\min}_{\beta} (Y-X\beta)^T(Y-X\beta) + \beta^T \lambda  I\beta\\ 
+&= \mathop{\arg\min}_{\beta} Y^TY - 2Y^TX\beta+\beta^TX^TX\beta+ \beta^T \lambda I \beta
+
+\end{align*}
+```
+By the First-order condition w.r.t.$\beta$, we have
+```{=tex}
+\begin{align*}
+F.O.C. \\
+\\
+&\frac{\partial Q}{\partial \beta} = -2X^TY+2X^TX\hat\beta+2\lambda I \hat\beta =0\\
+& \Rightarrow -X^TY + (X^TX+I)\hat\beta = 0 \\
+& \Rightarrow \hat\beta_{Ridge} = (X^TX + \lambda I)^{-1}X^TY
+\end{align*}
+```
+
+
