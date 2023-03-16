@@ -7,10 +7,7 @@ beta <- setNames(beta_vector, paste0("b", 0:20))
 n <- 500; p <- 50
 
 lambdas <- seq(0,2, length.out = 100)
-get_coef <- function(method="OLS", y, x, beta=i, model){
-    if (i > ncol(x)){
-        stop("i > ncol(x)")
-    }
+get_coef <- function(method="OLS", y, x, beta, model){
     if (model == 1){
         x <- x[,1:26]
     }
@@ -43,20 +40,20 @@ get_coef <- function(method="OLS", y, x, beta=i, model){
 }
 
 R <- 2000
-ols_b1.hat_dgp1_model1 <- c(); ols_b21.hat_dgp1_model1 <- c()
-ols_b1.hat_dgp1_model2 <- c(); ols_b21.hat_dgp1_model2 <- c()
-ols_b1.hat_dgp2_model1 <- c(); ols_b21.hat_dgp2_model1 <- c()
-ols_b1.hat_dgp2_model2 <- c(); ols_b21.hat_dgp2_model2 <- c()
+ols_b1.hat_dgp1_model1 <- rep(NA,R); ols_b21.hat_dgp1_model1 <- rep(NA, R)
+ols_b1.hat_dgp1_model2 <- rep(NA, R); ols_b21.hat_dgp1_model2 <- rep(NA, R)
+ols_b1.hat_dgp2_model1 <- rep(NA, R); ols_b21.hat_dgp2_model1 <- rep(NA, R)
+ols_b1.hat_dgp2_model2 <- rep(NA, R); ols_b21.hat_dgp2_model2 <- rep(NA, R)
 
-ridge_b1.hat_dgp1_model1 <- c(); ridge_b21.hat_dgp1_model1 <- c()
-ridge_b1.hat_dgp1_model2 <- c(); ridge_b21.hat_dgp1_model2 <- c()
-ridge_b1.hat_dgp2_model1 <- c(); ridge_b21.hat_dgp2_model1 <- c()
-ridge_b1.hat_dgp2_model2 <- c(); ridge_b21.hat_dgp2_model2 <- c()
+ridge_b1.hat_dgp1_model1 <- rep(NA, R); ridge_b21.hat_dgp1_model1 <- rep(NA, R)
+ridge_b1.hat_dgp1_model2 <- rep(NA, R); ridge_b21.hat_dgp1_model2 <- rep(NA, R)
+ridge_b1.hat_dgp2_model1 <- rep(NA, R); ridge_b21.hat_dgp2_model1 <- rep(NA, R)
+ridge_b1.hat_dgp2_model2 <- rep(NA, R); ridge_b21.hat_dgp2_model2 <- rep(NA, R)
 
-Lasso_b1.hat_dgp1_model1 <- c(); Lasso_b21.hat_dgp1_model1 <- c()
-Lasso_b1.hat_dgp1_model2 <- c(); Lasso_b21.hat_dgp1_model2 <- c()
-Lasso_b1.hat_dgp2_model1 <- c(); Lasso_b21.hat_dgp2_model1 <- c()
-Lasso_b1.hat_dgp2_model2 <- c(); Lasso_b21.hat_dgp2_model2 <- c()
+Lasso_b1.hat_dgp1_model1 <- rep(NA, R); Lasso_b21.hat_dgp1_model1 <- rep(NA, R)
+Lasso_b1.hat_dgp1_model2 <- rep(NA, R); Lasso_b21.hat_dgp1_model2 <- rep(NA, R)
+Lasso_b1.hat_dgp2_model1 <- rep(NA, R); Lasso_b21.hat_dgp2_model1 <- rep(NA, R)
+Lasso_b1.hat_dgp2_model2 <- rep(NA, R); Lasso_b21.hat_dgp2_model2 <- rep(NA, R)
 
 for(i in 1:R){
     print(i)
@@ -66,43 +63,42 @@ for(i in 1:R){
     y_dgp1 <- X[,1:3] %*% beta[1:3]+u
     y_dgp2 <- X[,1:21] %*% beta + u
     X <- X[,2:51]
-    ols_b1.hat_dgp1_model1 <- c(ols_b1.hat_dgp1_model1, get_coef("OLS", y_dgp1, X, beta=1, model=1))
-    ols_b1.hat_dgp1_model2 <- c(ols_b1.hat_dgp1_model2, get_coef("OLS", y_dgp1, X, beta=1, model=2))
-    ols_b1.hat_dgp2_model1 <- c(ols_b1.hat_dgp2_model1, get_coef("OLS", y_dgp2, X, beta=1, model=1))
-    ols_b1.hat_dgp2_model2 <- c(ols_b1.hat_dgp2_model2, get_coef("OLS", y_dgp2, X, beta=1, model=2))
+    ols_b1.hat_dgp1_model1[i] <- get_coef("OLS", y_dgp1, X, beta=1, model=1)
+    ols_b1.hat_dgp1_model2[i] <- get_coef("OLS", y_dgp1, X, beta=1, model=2)
+    ols_b1.hat_dgp2_model1[i] <- get_coef("OLS", y_dgp2, X, beta=1, model=1)
+    ols_b1.hat_dgp2_model2[i] <- get_coef("OLS", y_dgp2, X, beta=1, model=2)
     
-    ridge_b1.hat_dgp1_model1 <- c(ridge_b1.hat_dgp1_model1, get_coef("Ridge", y_dgp1, X, beta=1, model=1))
-    ridge_b1.hat_dgp1_model2 <- c(ridge_b1.hat_dgp1_model2, get_coef("Ridge", y_dgp1, X, beta=1, model=2))
-    ridge_b1.hat_dgp2_model1 <- c(ridge_b1.hat_dgp2_model1, get_coef("Ridge", y_dgp2, X, beta=1, model=1))
-    ridge_b1.hat_dgp2_model2 <- c(ridge_b1.hat_dgp2_model2, get_coef("Ridge", y_dgp2, X, beta=1, model=2))
+    ridge_b1.hat_dgp1_model1[i] <- get_coef("Ridge", y_dgp1, X, beta=1, model=1)
+    ridge_b1.hat_dgp1_model2[i] <- get_coef("Ridge", y_dgp1, X, beta=1, model=2)
+    ridge_b1.hat_dgp2_model1[i] <- get_coef("Ridge", y_dgp2, X, beta=1, model=1)
+    ridge_b1.hat_dgp2_model2[i] <- get_coef("Ridge", y_dgp2, X, beta=1, model=2)
     
-    Lasso_b1.hat_dgp1_model1 <- c(Lasso_b1.hat_dgp1_model1, get_coef("LASSO", y_dgp1, X, beta=1, model=1))
-    Lasso_b1.hat_dgp1_model2 <- c(Lasso_b1.hat_dgp1_model2, get_coef("LASSO", y_dgp1, X, beta=1, model=2))
-    Lasso_b1.hat_dgp2_model1 <- c(Lasso_b1.hat_dgp2_model1, get_coef("LASSO", y_dgp2, X, beta=1, model=1))
-    Lasso_b1.hat_dgp2_model2 <- c(Lasso_b1.hat_dgp2_model2, get_coef("LASSO", y_dgp2, X, beta=1, model=2))
+    Lasso_b1.hat_dgp1_model1[i] <- get_coef("LASSO", y_dgp1, X, beta=1, model=1)
+    Lasso_b1.hat_dgp1_model2[i] <- get_coef("LASSO", y_dgp1, X, beta=1, model=2)
+    Lasso_b1.hat_dgp2_model1[i] <- get_coef("LASSO", y_dgp2, X, beta=1, model=1)
+    Lasso_b1.hat_dgp2_model2[i] <- get_coef("LASSO", y_dgp2, X, beta=1, model=2)
     
     ############################
-    ols_b21.hat_dgp1_model1 <- c(ols_b21.hat_dgp1_model1, get_coef("OLS", y_dgp1, X, beta=2, model=1))
-    ols_b21.hat_dgp1_model2 <- c(ols_b21.hat_dgp1_model2, get_coef("OLS", y_dgp1, X, beta=2, model=2))
-    ols_b21.hat_dgp2_model1 <- c(ols_b21.hat_dgp2_model1, get_coef("OLS", y_dgp2, X, beta=2, model=1))
-    ols_b21.hat_dgp2_model2 <- c(ols_b21.hat_dgp2_model2, get_coef("OLS", y_dgp2, X, beta=2, model=2))
+    ols_b21.hat_dgp1_model1[i] <- get_coef("OLS", y_dgp1, X, beta=21, model=1)
+    ols_b21.hat_dgp1_model2[i] <- get_coef("OLS", y_dgp1, X, beta=21, model=2)
+    ols_b21.hat_dgp2_model1[i] <- get_coef("OLS", y_dgp2, X, beta=21, model=1)
+    ols_b21.hat_dgp2_model2[i] <- get_coef("OLS", y_dgp2, X, beta=21, model=2)
     
-    ridge_b21.hat_dgp1_model1 <- c(ridge_b21.hat_dgp1_model1, get_coef("Ridge", y_dgp1, X, beta=2, model=1))
-    ridge_b21.hat_dgp1_model2 <- c(ridge_b21.hat_dgp1_model2, get_coef("Ridge", y_dgp1, X, beta=2, model=2))
-    ridge_b21.hat_dgp2_model1 <- c(ridge_b21.hat_dgp2_model1, get_coef("Ridge", y_dgp2, X, beta=2, model=1))
-    ridge_b21.hat_dgp2_model2 <- c(ridge_b21.hat_dgp2_model2, get_coef("Ridge", y_dgp2, X, beta=2, model=2))
+    ridge_b21.hat_dgp1_model1[i] <- get_coef("Ridge", y_dgp1, X, beta=21, model=1)
+    ridge_b21.hat_dgp1_model2[i] <- get_coef("Ridge", y_dgp1, X, beta=21, model=2)
+    ridge_b21.hat_dgp2_model1[i] <- get_coef("Ridge", y_dgp2, X, beta=21, model=1)
+    ridge_b21.hat_dgp2_model2[i] <- get_coef("Ridge", y_dgp2, X, beta=21, model=2)
     
-    Lasso_b21.hat_dgp1_model1 <- c(Lasso_b21.hat_dgp1_model1, get_coef("LASSO", y_dgp1, X, beta=2, model=1))
-    Lasso_b21.hat_dgp1_model2 <- c(Lasso_b21.hat_dgp1_model2, get_coef("LASSO", y_dgp1, X, beta=2, model=2))
-    Lasso_b21.hat_dgp2_model1 <- c(Lasso_b21.hat_dgp2_model1, get_coef("LASSO", y_dgp2, X, beta=2, model=1))
-    Lasso_b21.hat_dgp2_model2 <- c(Lasso_b21.hat_dgp2_model2, get_coef("LASSO", y_dgp2, X, beta=2, model=2))
+    Lasso_b21.hat_dgp1_model1[i] <- get_coef("LASSO", y_dgp1, X, beta=21, model=1)
+    Lasso_b21.hat_dgp1_model2[i] <- get_coef("LASSO", y_dgp1, X, beta=21, model=2)
+    Lasso_b21.hat_dgp2_model1[i] <- get_coef("LASSO", y_dgp2, X, beta=21, model=1)
+    Lasso_b21.hat_dgp2_model2[i] <- get_coef("LASSO", y_dgp2, X, beta=21, model=2)
 }
 
 
 
 
-c(mean(ols_b1.hat_dgp1), mean(ols_b1.hat_dgp2), mean(ridge_b1.hat_dgp1),
-  mean(ridge_b1.hat_dgp2), mean(Lasso_b1.hat_dgp1), mean(Lasso_b1.hat_dgp2))
+c(mean(ols_b1.hat_dgp1_model1), mean(ols_b1.hat_dgp1_model2), mean(ols_b1.hat_dgp2_model1),mean(ols_b1.hat_dgp2_model2))
 
 rmse <- function(x){
     return(sqrt((R)^-1 * sum(x - 1)^2))
