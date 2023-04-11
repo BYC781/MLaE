@@ -45,7 +45,7 @@ source("Function.R")
 ```{r parameters_iniitialize}
 beta_vector <- rep(1, 21)
 beta <- setNames(beta_vector, paste0("b", 0:20))
-n <- 500; p <- 50; tra.idx <- 1:400; R <- 2000
+n <- 500; p <- 50; tra.idx <- 1:400; R <- 20
 ```
 
 ### The program for a. and b.
