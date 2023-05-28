@@ -1,0 +1,84 @@
+---
+title: "MLaE: Whether WFH affect well-being"
+author: "Boyu Chen, Yihuai Chang"
+date: "2023-04-11"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Research Motivation
+
+-   Under the pandemic, there were many inconveniences.
+-   We try to figure out how working from home affect workers' well-being.
+-   Our assumption is that working from home has negative impact on workers' well-being, since they might feel socially isolated.
+
+## Literature
+-   Marco Bertoni,Danilo Cavapozzi et al.*(2022), “Remote Working and Mental Health During the First Wave of the COVID-19 Pandemic”
+
+## Data Source
+
+IPUMS Time Use 2021
+
+-   $D_i$: Distance working binary variable
+-   $Y_i$: Well-being ladder (0-10)
+-   $X_i$: Control variables, including statefip, age, gender, \# of kids, industry and occupation, earning per week, working hours, family income, \# of family members, class of worker, race.
+-   \# of observations: 3,281,  \# of variables: 120
+
+## Assumptions
+
+-   We assume that unconfoundedness is satisfied, which is:
+    $$(Y_{i(0)}, Y_{i(1)})\perp D_i|X_i$$
+-   The sparsity assumption holds
+
+# Model
+
+## Run OLS
+
+Consider the following model:
+
+$$Y_i = \tau_{ols} D_{i} + X_{i}^T \boldsymbol{\beta} + \epsilon_{i}, \forall i=1,...,n$$ Where $\tau_{ols}, D_i$ are scalar, $X_i$ is a $k \times 1$ vector, $\boldsymbol{\beta}$ is a $k \times 1$ vector.
+
+## Run DML
+
+Given
+
+$$\xi_0(X_i)=E(Y_i|X_i)$$ $$m_0(X_i)=E(D_i|X_i)=Pr(D_i=1|X_i)$$
+
+We consider the following model: $$Y_i - \xi_0(X_i) = \tau_{dml} (D_i - m_0(X_i)) + u_i$$
+
+-   First, we run Lasso (Y on X) to get $\hat\xi_0(X_i)$ and run Lasso (D on X) to get $\hat m_0(X_i)$
+-   Second, we regress $Y_i - \hat\xi_0(X_i)$ on $(D_i - \hat m_0(X_i))$ to get $\hat\tau_{dml}$
+-   $\hat\tau_{dml}$ is the treatment effect we want.
+
+# Preliminary analysis
+
+## Descriptive Statistics
+
+```{r}
+knitr::include_graphics("descriptive_statistics.png")
+```
+
+
+## Graph
+```{r}
+knitr::include_graphics("hist.png")
+```
+
+## Estimation Result: OLS
+
+```{r}
+knitr::include_graphics("reg wbladder D X.png")
+```
+
+## Estimation Result: DDML
+
+```{r}
+knitr::include_graphics("DDML wbladder D X.png")
+```
+
+## Conclusion
+-   It seems that working from home will reduce the distance workers' well-being.
+-   We will further examine whether if distance workers' exercise time, sleep time and social time are significantly different to control group.
