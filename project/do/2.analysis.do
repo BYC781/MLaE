@@ -6,18 +6,19 @@ cd "/Users/bychen/Documents/MLaE/project"
 use sleeptime_clear.dta, clear
 
 // Set X, D
-global X i.statefip age female hh_numkids i.ind2  earnweek uhrsworkt famincome hh_size i.clwkr i.race
-
-global X1 i.statefip age female hh_numkids i.ind2 i.occ2 i.fullpart earnweek uhrsworkt famincome hh_size hh_child i.clwkr i.race 
-
-global X2 i.statefip age female hh_numkids i.ind2 i.occ2 i.fullpart earnweek uhrsworkt famincome hh_size hh_child i.clwkr i.race bls_leis_soccom bls_leis_sport bls_pcare_health bls_pcare_sleep bls_work_working painmed rested
+global X i.statefip age female hh_child i.occ2 earnweek i.race i.fullpart
 
 global D distance_work
-pdslasso wbladder $D ($X2), rob
-qddml wbladder $D ($X2), kfolds(2) model(partial) cmd(rlasso) reps(5)
-xpopoisson wbladder $D, controls($X2)
-psmatch2 $D $X2, out(wbladder) logit n(2)
-reg wbladder $D $X2, r
+
+global Y wbladder
+
+pdslasso wbladder $D ($X), rob
+qddml wbladder $D ($X), kfolds(5) model(partial) cmd(rlasso) reps(5)
+xpopoisson $Y $D, controls($X)
+psmatch2 $D $X, out($Y) logit n(2)
+reg $Y $D $X, r
+
+
 set seed 42
 
 // pdslasso
