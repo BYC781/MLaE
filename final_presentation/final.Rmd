@@ -35,6 +35,28 @@ IPUMS Time Use 2021
 
 # Model
 
+### Poisson regression
+
+Because our $Y$ is a count data, we use poisson regression with double machine learning to specify our treatment effect.
+
+### Recall: Poisson
+
+-   poisson pdf:
+
+    -   If $Y \sim poisson(\lambda)$, then $f(y) = \frac{\lambda^y e^{-\lambda}}{y!}$
+
+-   poisson regression: let $\lambda_i =E(y_i|X_i)= exp(X_i'\beta)$ ,
+
+    -   The conditional pdf is $f(y_i|X_i) = \frac{exp(X_i'\beta)^{y_i} e^{-exp(X_i'\beta)}}{y_i!}$
+
+    -   The log-likelihood is $\ell(\beta|y_i,X_i) = y_i(X_i'\beta) - exp(-X'\beta) - ln(y_i!)$
+
+    -   The poisson regression LASSO criterion is
+
+        $$
+        min_{\beta, \gamma} \space Q(\beta,\gamma|X,Y) = -n^{-1} \sum_{i=1}^n \ell(\beta|y_i,X_i) + \gamma \sum_{j=1}^p |\beta_j|
+        $$
+
 ## XPOPOSSION
 
 Cross-fit partialing-out lasso Poisson regression, the model is:
