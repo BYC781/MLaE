@@ -202,5 +202,12 @@ knitr::include_graphics("ddml.png")
 
 ## Conclusion
 
--   It seems that working from home will reduce the distance workers' well-being.
--   We will further examine whether if distance workers' exercise time, sleep time and social time are significantly different to control group.
+-   Our main finding indicates that working from home slightly decreases workers' well-being by 0.98%, but this decrease is not statistically significant at a 5% significance level. However, it is approaching statistical significance.
+-   Working from home has a negative impact on well-being for men, but not for women.
+-   Additionally, married individuals reported higher levels of well-being compared to unmarried individuals.
+-   Specifically, working from home decreases the well-being of single men by 0.92%.
+
+## Limitation
+
+-   Using survey data may cause some problems.All the data in this study was self-reported.
+-   Our sample size is rather small.
