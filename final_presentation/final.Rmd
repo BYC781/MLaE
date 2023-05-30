@@ -188,6 +188,22 @@ not married:
 knitr::include_graphics("sub_notmarried.png")
 ```
 
+## Subgroup: single and married men
+
+single men:
+
+```{r}
+knitr::include_graphics("sub_singlemen.png")
+```
+
+## Subgroup: single and married men
+
+married men:
+
+```{r}
+knitr::include_graphics("sub_marriedmen.png")
+```
+
 ## Robustness Check: PSM
 
 ```{r}
@@ -209,5 +225,5 @@ knitr::include_graphics("ddml.png")
 
 ## Limitation
 
--   Using survey data may cause some problems.All the data in this study was self-reported.
+-   Using survey data may cause some problems. All the data in this study was self-reported.
 -   Our sample size is rather small.
