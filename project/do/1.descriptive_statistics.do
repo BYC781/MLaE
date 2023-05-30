@@ -1,10 +1,12 @@
 clear all
 set more off
 
-cd "/Users/yihuai/Documents/yihuai/研究所/econometrics with machine learning/project/data"
+cd "/Users/bychen/Documents/MLaE/project"
 
 use sleeptime_clear.dta, clear
 
-** descriptive statistics
-*averge: age, kids, sex, earnweek, marital staus, personal care(sleep), covid 
-
+sort distance_work
+by distance_work : sum wbladder
+graph box wbladder, by(distance_work)
+graph box wbladder, by(marst)
+graph box wbladder, by(female)

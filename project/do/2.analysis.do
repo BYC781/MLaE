@@ -7,16 +7,14 @@ use sleeptime_clear.dta, clear
 
 // Set X, D
 global X i.statefip age female hh_child i.occ2 earnweek i.race i.fullpart
-
 global D distance_work
-
 global Y wbladder
 
 pdslasso wbladder $D ($X), rob
 qddml wbladder $D ($X), kfolds(5) model(partial) cmd(rlasso) reps(5)
-xpopoisson $Y $D, controls($X)
+xpopoisson $Y $D, controls(c.age##c.female)
 psmatch2 $D $X, out($Y) logit n(2)
-reg $Y $D $X, r
+reg $Y $D $XX##$XX, r
 
 
 set seed 42
