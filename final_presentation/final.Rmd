@@ -86,7 +86,7 @@ Run Double Selection poisson lasso For $k = 1, ...,K$
 4.  Using the observations $i \in IC_k$, perform a linear lasso of $D$ on $X$ using observation-level weights, $w_i$.
 
     $$w_i = exp'(D_i \tilde \alpha_k + \tilde s_i)$$
-    
+
     Denote the selected controls by $\tilde X_{k}$.
 
 ## XPOLPR algorithm
@@ -103,9 +103,28 @@ Run Double Selection poisson lasso For $k = 1, ...,K$
 
 Compute the point estimates $\hat \alpha$ by solving the following sample-moment equations.
 
-    $$ 
-    \frac{1}{n} \sum_{i=1}^n \lbrace y_i - exp(D_i \alpha' + \tilde s_i)	\rbrace z_i' = 0 
-    $$
+$$
+\frac{1}{n} \sum_{i=1}^n \lbrace y_i - exp(D_i \alpha' + \tilde s_i)   \rbrace z_i = 0 
+$$
+
+## XPOLPR algorithm
+
+### Step 5
+
+Variance estimation is estimated by
+
+$$
+\hat {Var}(\hat \alpha) = n^{-1} \hat J_0^{-1} \hat \Psi (\hat J_0^{-1})'
+$$
+
+where
+\begin{align*}
+&\hat \Psi = K^{-1} \sum_{k=1}^K \hat \Psi_k \\
+&\hat \Psi_k = n_k^{-1} \sum_{i \in I_k} \hat\psi_i \hat\psi_i' \\
+&\hat\psi_i = \lbrace y_i - exp(d \hat \alpha + \hat s_i) \rbrace z_i \\
+&\hat J_0 = K^{-1} \sum_{k=1}^K (n_k^{-1} \sum_{i \in I_k} \hat \psi_i^{\alpha}) \\
+&\hat \psi_i^{\alpha} = \frac{\partial \hat \psi_i}{ \partial \hat \alpha}
+\end{align*}
 
 # analysis
 
@@ -130,6 +149,7 @@ knitr::include_graphics("sub_male.png")
 ```
 
 ## Subgroup: gender
+
 female:
 
 ```{r}
