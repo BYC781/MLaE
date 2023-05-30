@@ -1,0 +1,186 @@
+---
+title: "MLaE: Whether WFH affect well-being"
+author: "Boyu Chen, Yihuai Chang"
+date: "2023-05-29"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Research Motivation
+
+-   Under the pandemic, there were many inconveniences.
+-   We try to figure out how working from home affect workers' well-being.
+-   Our assumption is that working from home has negative impact on workers' well-being, since they might feel socially isolated.
+
+## Literature
+
+-   Marco Bertoni,Danilo Cavapozzi et al.\*(2022), "Remote Working and Mental Health During the First Wave of the COVID-19 Pandemic"
+
+## Data Source
+
+IPUMS Time Use 2021
+
+-   $D_i$: Distance working binary variable
+-   $Y_i$: Well-being ladder (0-10)
+-   $X_i$: Control variables, including statefip, age, gender, have kids, occupation, earning per week, race, fullpart.
+-   \# of observations: 3,281, \# of variables: 94
+
+## Assumptions
+
+-   We assume that unconfoundedness is satisfied, which is: $$(Y_{i(0)}, Y_{i(1)})\perp D_i|X_i$$
+-   The sparsity assumption holds
+
+# Model
+
+## XPOPOSSION
+
+Cross-fit partialing-out lasso Poisson regression, the model is:
+
+$$E(y|D,X) = exp(D \alpha + X^T\beta)$$ where
+
+-   $y$ is the dep. variable.
+
+-   $D$ is treatment, which is a scalar.
+
+-   $X$ is the control variable matrix, which is a $n\times p$ matrix.
+
+-   $\beta$ is a $p \times 1$ vector.
+
+## XPOLPR algorithm
+
+### Step 1
+
+Randomly Partition the sample to K folds.
+
+### Step 2
+
+Define two sets:
+
+-   $I_k$: the obs. in fold k
+
+-   $IC_k$: the obs. not in fold k
+
+## XPOLPR algorithm
+
+### Step 3
+
+Run Double Selection poisson lasso For $k = 1, ...,K$
+
+1.  Run poisson lasso for the following model$$
+    y = exp(D \alpha_k + X' \beta_k)
+    $$and we get the non-zero covariates, denoted by $\tilde X_{k,y}$.
+
+2.  Run poisson regression for the following model$$y = exp(D \alpha_k + \tilde X_{k,y}' \beta_k)$$and we get the estimated coefficients $\tilde\alpha_k$ and $\tilde \delta_k$.
+
+## XPOLPR algorithm
+
+3.  For the obs. $i \in I_k$ , fill in the prediction for the high-dimensional component using the out-of-sample estimate $\tilde \delta_k$.
+
+    $$
+    \tilde s_i = \tilde X_{k,y,i}' \tilde \delta_k
+    $$
+
+4.  Using the observations $i \in IC_k$, perform a linear lasso of $D$ on $X$ using observation-level weights, $w_i$.
+
+    $$w_i = exp'(D_i \tilde \alpha_k + \tilde s_i)$$
+    
+    Denote the selected controls by $\tilde X_{k}$.
+
+## XPOLPR algorithm
+
+5.  Using the observations $i \in IC_k$, fit a linear regression of $D$ on $\tilde X_{k}$, and denote the coefficient estimates by $\hat \gamma_{k}$.
+
+6.  For each observation $i \in I_k$, fill in the instrument
+
+    $$z_i = D_i - \tilde X_{k,i} \hat \gamma_{k}'$$
+
+## XPOLPR algorithm
+
+### Step 4
+
+Compute the point estimates $\hat \alpha$ by solving the following sample-moment equations.
+
+    $$ 
+    \frac{1}{n} \sum_{i=1}^n \lbrace y_i - exp(D_i \alpha' + \tilde s_i)	\rbrace z_i' = 0 
+    $$
+
+# analysis
+
+## Descriptive Statistics
+
+```{r}
+knitr::include_graphics("descriptive_statistics.png")
+```
+
+## Main Result
+
+```{r}
+knitr::include_graphics("main_result.png")
+```
+
+## Subgroup: gender
+
+male:
+
+```{r}
+knitr::include_graphics("sub_male.png")
+```
+
+## Subgroup: gender
+female:
+
+```{r}
+knitr::include_graphics("sub_female.png")
+```
+
+## Subgroup: have children or not
+
+have children:
+
+```{r}
+knitr::include_graphics("sub_havechild.png")
+```
+
+## Subgroup: have children or not
+
+do not have any child:
+
+```{r}
+knitr::include_graphics("sub_nochild.png")
+```
+
+## Subgroup: marital status
+
+married:
+
+```{r}
+knitr::include_graphics("sub_married.png")
+```
+
+## Subgroup: marital status
+
+not married:
+
+```{r}
+knitr::include_graphics("sub_notmarried.png")
+```
+
+## Robustness Check: PSM
+
+```{r}
+knitr::include_graphics("matching.png")
+```
+
+## Robustness Check: DML
+
+```{r}
+knitr::include_graphics("ddml.png")
+```
+
+## Conclusion
+
+-   It seems that working from home will reduce the distance workers' well-being.
+-   We will further examine whether if distance workers' exercise time, sleep time and social time are significantly different to control group.
