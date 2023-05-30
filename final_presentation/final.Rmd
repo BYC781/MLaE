@@ -11,9 +11,13 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Research Motivation
 
--   Under the pandemic, there were many inconveniences.
--   We try to figure out how working from home affect workers' well-being.
--   Our assumption is that working from home has negative impact on workers' well-being, since they might feel socially isolated.
+-   During the COVID-19 pandemic, there are a lot of workers were asked to work form home because of lock-down.
+
+-   The question we want to examine is:
+
+    During the pandemic, is the **well-being index** of home workers lower?
+
+-   Our hypothesis is that working from home has negative impact on workers' well-being, since they might feel socially isolated.
 
 ## Literature
 
@@ -21,11 +25,22 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Data Source
 
-IPUMS Time Use 2021
+IPUMS Time Use 2021, which is cross-sectional individual-level survey data.
 
--   $D_i$: Distance working binary variable
--   $Y_i$: Well-being ladder (0-10)
--   $X_i$: Control variables, including statefip, age, gender, have kids, occupation, earning per week, race, fullpart.
+-   We dropped all the observations do not answer whether they are working from home or not, as well as excluded those observations with no job and no income.
+
+-   $Y_i$ represents an outcome of interest:
+
+    -   `Well-being index`: 0\~10, 0 for the worst life, 10 for the best life
+
+-   $D_i$ represents a binary treatment of interest:
+
+    -   `Distance working or not` : 1 for distance worker, 0 for commuter
+
+-   $X_i$ represents the a set of control variables:
+
+    -   `Occupation`, `marrital status`,`age`, `race`, `sex`, `have child or not`, `full-time or part-time`, `earning per week`, `State`
+
 -   \# of observations: 3,281, \# of variables: 94
 
 ## Assumptions
@@ -61,13 +76,13 @@ Because our $Y$ is a count data, we use poisson regression with double machine l
 
 Cross-fit partialing-out lasso Poisson regression, the model is:
 
-$$E(y|D,X) = exp(D \alpha + X^T\beta)$$ where
+$$E(y_i|D,X) = exp(D_i \alpha + X_i'\beta)$$ where
 
--   $y$ is the dep. variable.
+-   $y_i$ is the dep. variable.
 
--   $D$ is treatment, which is a scalar.
+-   $D_i$ is treatment, which is a scalar.
 
--   $X$ is the control variable matrix, which is a $n\times p$ matrix.
+-   $X_i$ is the control variable vector, which is a $p\times 1$ vector.
 
 -   $\beta$ is a $p \times 1$ vector.
 
@@ -91,11 +106,11 @@ Define two sets:
 
 Run Double Selection poisson lasso For $k = 1, ...,K$
 
-1.  Run poisson lasso for the following model$$
-    y = exp(D \alpha_k + X' \beta_k)
+1.  Using all $i \in IC_k$, run poisson lasso for the following model$$
+    y_i = exp(D_i \alpha_k + X_i' \beta_k)
     $$and we get the non-zero covariates, denoted by $\tilde X_{k,y}$.
 
-2.  Run poisson regression for the following model$$y = exp(D \alpha_k + \tilde X_{k,y}' \beta_k)$$and we get the estimated coefficients $\tilde\alpha_k$ and $\tilde \delta_k$.
+2.  Using all $i \in IC_k$, run poisson regression for the following model$$y_i = exp(D_i \alpha_k + \tilde X_{k,y,i}' \beta_k)$$and we get the estimated coefficients $\tilde\alpha_k$ and $\tilde \delta_k$.
 
 ## XPOLPR algorithm
 
@@ -139,8 +154,7 @@ $$
 \hat {Var}(\hat \alpha) = n^{-1} \hat J_0^{-1} \hat \Psi (\hat J_0^{-1})'
 $$
 
-where
-\begin{align*}
+where \begin{align*}
 &\hat \Psi = K^{-1} \sum_{k=1}^K \hat \Psi_k \\
 &\hat \Psi_k = n_k^{-1} \sum_{i \in I_k} \hat\psi_i \hat\psi_i' \\
 &\hat\psi_i = \lbrace y_i - exp(d \hat \alpha + \hat s_i) \rbrace z_i \\
