@@ -39,7 +39,7 @@ IPUMS Time Use 2021, which is cross-sectional individual-level survey data.
 
 -   $X_i$ represents the a set of control variables:
 
-    -   `Occupation`, `marrital status`,`age`, `race`, `sex`, `have child or not`, `full-time or part-time`, `earning per week`, `State`
+    -   `Occupation`, `marital status`,`age`, `race`, `sex`, `have child or not`, `full-time or part-time`, `earning per week`, `State`
 
 -   \# of observations: 3,281, \# of variables: 94
 
@@ -110,7 +110,7 @@ Run Double Selection poisson lasso For $k = 1, ...,K$
     y_i = exp(D_i \alpha_k + X_i' \beta_k)
     $$and we get the non-zero covariates, denoted by $\tilde X_{k,y}$.
 
-2.  Using all $i \in IC_k$, run poisson regression for the following model$$y_i = exp(D_i \alpha_k + \tilde X_{k,y,i}' \beta_k)$$and we get the estimated coefficients $\tilde\alpha_k$ and $\tilde \delta_k$.
+2.  Using all $i \in IC_k$, run poisson regression for the following model$$y_i = exp(D_i \alpha_k + \tilde X_{k,y,i}' \delta_k)$$and we get the estimated coefficients $\tilde\alpha_k$ and $\tilde \delta_k$.
 
 ## XPOLPR algorithm
 
@@ -166,7 +166,7 @@ where \begin{align*}
 
 ## Descriptive Statistics
 
-```{r}
+```{r, out.width="80%"}
 knitr::include_graphics("descriptive_statistics.png")
 ```
 
